@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+vector<double> solution(int k, vector<vector<int>> ranges) {
+    vector<double> answer;
+    vector<double> sequence;
+    //우박수열 구하기
+    while(1) {
+        //1이하면 멈춤
+        if(k <= 1){
+            sequence.push_back(k);
+            break;
+        }
+        //짝수
+        if(k % 2 == 0) {
+            sequence.push_back(k);
+            k = k / 2;
+        }
+        //홀수
+        else {
+            sequence.push_back(k);
+            k = (k * 3) + 1;
+        }
+    }
+    
+    int n = sequence.size() - 1;
+    //ranges 반복
+    for(vector<int> temp : ranges) {
+        int start = temp[0];
+        int end = temp[1];
+        double result = 0.0;
+        //시작이 끝보다 크면 -1 리턴
+        if(start > n + end){
+            result = -1;
+        }
+        else{
+            //가로길이 1만큼 정적분 반복
+            while(start + 1 <= n + end){
+                result += (sequence[start] + sequence[start + 1]) / 2;
+                start += 1;
+            }
+        }
+        answer.push_back(result);
+    }
+    
+    
+    return answer;
+}
