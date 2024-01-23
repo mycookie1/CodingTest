@@ -1,0 +1,35 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+
+int solution(int n, int k, vector<int> enemy) {
+    int answer = 0;
+    //  1라운드 부터 진행한다.
+    // 1라운드부터 enemy를 더해나가서 n보다 커지면 그 때 무적권을 사용
+    // 가장 큰 enemy에서 무적권을 사용하는게 유리함으로 priority queue를 사용
+    priority_queue<int> q;
+    
+    int sum = 0;
+    for(int temp : enemy){
+        sum += temp;
+        q.push(temp);
+        
+        if(sum > n ) {
+            //무적권의 존재 유무 판단
+            if(k>0){
+                k--;
+                sum -= q.top();
+                q.pop();
+            }
+            else {
+                break;
+            }
+        }
+        if(sum > n ) break;
+        //라운를 막았다면 anser + 1
+        answer++;
+    }
+    return answer;
+}
