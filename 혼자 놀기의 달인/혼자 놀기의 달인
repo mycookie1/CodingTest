@@ -1,0 +1,46 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+bool check[101];
+int solution(vector<int> cards) {
+    int answer = 0;
+    
+    //순환하는 그룹의 포함된 카드 수
+    vector<int> group; 
+    
+    for(int i = 0; i < cards.size(); i++){
+        //index : i번째 cards벡터에 있는 수
+        //cnt : 그룹의 수
+        int index = cards[i];
+        int cnt = 0;
+        
+        //순환하는 그룹찾기
+        //check로 방문확인하기
+        while(1){
+            if(check[index - 1]) break;
+            check[index - 1] = true;
+            index = cards[index - 1];
+            cnt++;   
+        }
+        
+        if(cnt > 0){
+            group.push_back(cnt);
+        }
+    }
+    
+    // 크기순으로 나열
+    sort(group.begin(),group.end());
+    
+    // 가장 큰 2가지를 곱함
+    if( group.size() > 1){
+        answer = group[group.size()-1] * group[group.size()-2];
+    }
+    // 1개 이하인 경우
+    else{
+        answer = 0;
+    }
+    
+    return answer;
+}
