@@ -1,0 +1,31 @@
+using namespace std;
+
+long long solution(int w,int h) {
+    long long answer = 1;
+    answer = (long long)w*h;
+    
+    //w가 무조건 더 작게
+    int temp = 0;
+    if(w > h) {
+        temp = w;
+        w = h;
+        h = temp;
+    }
+    
+    //최대공약수 찾기
+    temp = 1;
+    for(int i = 1; i <= w; i++) {
+        if( w % i == 0 && h % i == 0) {
+            temp = i;
+        }    
+    }
+    
+    //반복하는 가장 작은 사각형의 가로 세로를 구한다.
+    w = w / temp;
+    h = h / temp;
+    
+    //반복되는 패턴 만큼 제외
+    answer = answer - (long long)((w+h-1)*temp);
+    
+    return answer;
+}
