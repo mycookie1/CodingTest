@@ -1,0 +1,32 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int storey) {
+    int answer = 0;
+    //6이상이면 거꾸로하는게 더 가성비있다.
+    //처음 생각은 뒷 자리부터 시작해 6이상이면 11 - n 이런식으로 추가했음
+    //95 같은 경우를 처리하지 못함
+    //그래서 자리수가 6이상이면 10-n 그리고 자리수를 앞자리수에 1을 더하는 것으로 해결
+    //만약 자리수가 5라면 10-n과 n이 같다. 이 경우 앞자리에 1을 더하는게 이득인지 아닌지 앞자리를 보고 결정한다. 
+    while(storey != 0) {
+        int n = storey % 10; 
+        //자리수가 6이상
+        if(n >= 6) {
+            storey += (10 - n);
+            answer += (10 - n);
+        }
+        //자리수가 5이고 앞자리가 5이상
+        else if (n == 5 and (storey / 10) % 10 >= 5) {
+            storey += (10 - n);
+            answer += (10 - n);
+        }
+        //그이외
+        else {
+            answer += n;
+            storey = storey / 10;
+        }
+    }
+    return answer;
+}
