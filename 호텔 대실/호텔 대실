@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+int solution(vector<vector<string>> book_time) {
+    int answer = 0;
+    priority_queue<int> q;
+    vector<pair<int,int>> v;
+    
+    //벡터에 시간을 분으로 변환하여 pair형태로 넣는다
+    for(vector<string> temp : book_time){
+        int hour = temp[0][0]-'0';
+        hour = hour*10 + temp[0][1]-'0';
+        int min = temp[0][3] - '0';
+        min = min*10 + temp[0][4] -'0';
+        int first_time = hour*60 + min;
+        
+        hour = temp[1][0]-'0';
+        hour = hour*10 + temp[1][1]-'0';
+        min = temp[1][3] - '0';
+        min = min*10 + temp[1][4] -'0';
+        int second_time = hour*60 + min + 10;
+        
+        v.push_back(make_pair(first_time, second_time));
+    }
+    //벡터의 sort
+    sort(v.begin(), v.end());
+    
+    //priority queue에 퇴실시간을 넣는다.
+    //pq에 들어있는 가장 빠른 퇴실시간보다 먼저 입실한다면 새로운 방을 써야한다.
+    //pq에 들어있는 가장 빠른 퇴실시간보다 늦게 입실한다면 사용중인 방을 재사용가능하다. 
+    //반복을 통해 모든 방을 확인한다.
+    for(pair<int,int> p: v) {
+        int first = p.first;
+        int second = p.second;
+        while(1){
+            if(q.empty()){
+                q.push(second*-1);
+                break;
+            }
+            //pq에 들어있는 가장 빠른 퇴실시간보다 먼저 입실한다면 pq에 추가
+            else if(q.top()*-1 > first) {
+                q.push(second*-1);
+                break;
+            }
+            //입실시간보다 퇴실시간이 빠른 방을 모두 pop한다.
+            else {
+                q.pop();
+            }
+        }
+        
+        
+        if(q.size() > answer) {
+            answer = q.size();
+        }
+    }
+    
+    return answer;
+}
