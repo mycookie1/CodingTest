@@ -1,0 +1,42 @@
+#include <string>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+int solution(vector<int> order) {
+    int answer = 0;
+    stack<int> belt;
+    int index = 0;
+    
+    //컨테이너 벨트가 돌아가는 걸 구현
+    for(int i = 1; i <= order.size(); i++) {
+        //컨테이너 벨트 맨 앞이 트럭의 순서와 같을 때
+        if(order[index] == i) {
+            answer++;
+            index++;
+        }
+        //보조 컨테이너 마지막 상자와 트럭의 순서가 같을 때
+        else if(!belt.empty() && belt.top() == order[index]) {
+            belt.pop();
+            answer++;
+            index++;
+        }
+        //보조 컨테이너에 넣기
+        else {
+            belt.push(i);
+        }
+        
+        //보조 컨테이너에 쌓인 박스가 트럭 순서에 맞게 있는지 확인
+        while(!belt.empty()) {
+            if(belt.top() == order[index]) {
+                belt.pop();
+                answer++;
+                index++;
+            }
+            else break;
+        }
+    }
+    
+    return answer;
+}
