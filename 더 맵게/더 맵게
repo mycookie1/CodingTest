@@ -1,0 +1,38 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+
+int solution(vector<int> scoville, int K) {
+    int answer = 0;
+    priority_queue<int> pq;
+    // priority queue 초기화
+    for(int scov : scoville) {
+        pq.push(scov*-1);
+    }
+    
+    // 음식 섞기
+    while(1) {
+        
+        // 스코빌이 가장 작은 음식이 k를 넘으면 break
+        if((pq.top()*-1) >= K) break;
+        
+        // priority queue에 2개보다 적게 남아있다면 더 맵게 만들 수 없다
+        if(pq.size() < 2) {
+            answer = -1;
+            break;
+        }
+        
+        
+        int first = pq.top()*-1;
+        pq.pop();
+        int second = pq.top()*-1;
+        pq.pop();
+        // 가장 덜 매운 2가지 조합
+        pq.push((first + second*2)*-1);
+        answer++;
+    }
+    
+    return answer;
+}
