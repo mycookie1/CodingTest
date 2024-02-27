@@ -1,0 +1,39 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+int answer = 0;
+int cnt = -1;
+string target = "";
+string AEIOU = "AEIOU";
+    
+void dfs(string word) {
+    
+    cnt++;
+    
+    //word가 target이 일치
+    if(target == word) {
+        answer = cnt;
+        return;
+    }
+        
+    //사전순서를 맞추기 위해 5제한 
+    if(word.size() >= 5){
+        return;
+    } 
+    
+    //dfs
+    for(int i = 0; i < 5; i++) {
+        dfs(word + AEIOU[i]);
+    }
+}
+
+int solution(string temp) {
+    
+    target = temp;
+    dfs("");
+    
+    return answer;
+}
