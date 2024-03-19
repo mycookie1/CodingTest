@@ -1,0 +1,40 @@
+#include <string>
+#include <vector>
+#include <queue>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int n = 0;
+int globalK = 0;
+bool check[8];
+int answer = 0;
+int result = 0;
+vector<vector<int>> global_dungeons;
+
+void func() {
+    for(int i = 0; i < n; i++) {
+        // 아직 방문하지 않음
+        if(check[i] == false && globalK >= global_dungeons[i][0]) {
+            // 방문
+            globalK -= global_dungeons[i][1];
+            check[i] = true;
+            answer++;
+            if(answer > result) result = answer;
+            func();
+            
+            // 되돌리기
+            check[i] = false;
+            answer--;
+            globalK += global_dungeons[i][1];
+        }
+    }
+}
+
+int solution(int k, vector<vector<int>> dungeons) {
+    n = dungeons.size();
+    globalK = k;
+    global_dungeons = dungeons;
+    func();
+    
+    return result;
+}
