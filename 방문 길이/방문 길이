@@ -1,0 +1,40 @@
+#include <string>
+using namespace std;
+bool check[11][11][4];
+int movex[4] = {-1,0,1,0};
+int movey[4] = {0,1,0,-1};
+int x = 5;
+int y = 5;
+int answer = 0;
+
+bool checkBoundary(int x, int y) {
+    if(x >= 0 && x <= 10 && y >= 0 && y <= 10) return true;
+    else return false;
+}
+void moveCharacter(int idx){
+    if(checkBoundary(x + movex[idx], y + movey[idx])) {
+        if(check[x][y][idx] == false) answer++;
+        check[x][y][idx] = true;
+        x += movex[idx];
+        y += movey[idx];
+        check[x][y][(idx+2) % 4] = true;
+    }
+}
+//u 0
+//d 1
+//r 2
+//l 3
+int solution(string dirs) {
+    for(int i = 0; i < dirs.size(); i++) {
+        char d = dirs[i];
+        // 위로 이동
+        if(d == 'U') moveCharacter(0);
+        // 아래로 이동
+        else if(d == 'D') moveCharacter(2);
+        // 오른쪽 이동
+        else if(d == 'R') moveCharacter(1);
+        // 왼쪽 이동
+        else moveCharacter(3);
+    }
+    return answer;
+}
