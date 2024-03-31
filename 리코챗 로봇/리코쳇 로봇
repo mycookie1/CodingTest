@@ -1,0 +1,97 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+//bfs
+//dfs
+int board[100][100];
+int check[100][100][4];
+
+int move_x[4] = {0,1,0,-1};
+int move_y[4] = {1,0,-1,0};
+
+
+int goal_x = 0;
+int goal_y = 0;
+
+int row = 0;
+int col = 0;
+
+int result = 9999999;
+
+bool check_boundary(int x, int y){
+    if(0 <= x && x < row && 0 <= y && y < col) return true;
+    else return false;
+}
+
+void move(int x, int y, int d, int cnt){
+    int current_x = x; 
+    int current_y = y;
+    cnt++;
+    while(1) {
+  
+        int temp_x = current_x + move_x[d];
+        int temp_y = current_y + move_y[d];
+        
+        
+        if(check_boundary(temp_x, temp_y) && board[temp_x][temp_y] != 1) {
+            current_x = temp_x;
+            current_y = temp_y;
+        }
+        else break;
+    }
+    if( (current_x != x || current_y !=y) 
+       && check[current_x][current_y][d] > cnt ) {
+        check[current_x][current_y][d] = cnt;
+        for(int i = 0; i < 4; i++) {
+            move(current_x, current_y,i ,cnt);
+        }
+    }
+}
+
+
+int solution(vector<string> a) {
+    int current_x = 0; 
+    int current_y = 0;
+    for(int i = 0; i < a.size(); i++) {
+        for(int j = 0; j < a[0].size(); j++) {
+            check[i][j][0] = 9999999;
+            check[i][j][1] = 9999999;
+            check[i][j][2] = 9999999;
+            check[i][j][3] = 9999999;
+            char temp = a[i][j];
+            switch(temp) {
+                case 'R' :
+                    board[i][j] = 0;
+                    current_x = i;
+                    current_y = j;
+                    break;
+                case 'D' :
+                    board[i][j] = 1;
+                    break;
+                case 'G' :
+                    board[i][j] = 2;
+                    goal_x = i;
+                    goal_y = j;
+                    break;
+                default :
+                    break;
+            }
+        }
+    }
+    int answer = -1;
+    row = a.size();
+    col = a[0].size();
+    for(int i = 0; i < 4; i++) {
+        move(current_x, current_y, i, 0);
+    }
+    for(int i = 0; i < 4; i++) {
+        if(check[goal_x][goal_y][i] != 9999999 
+           && check[goal_x][goal_y][i] < result ) result = check[goal_x][goal_y][i];
+    }
+    if(result != 9999999) answer = result;
+
+    
+    return answer;
+}
