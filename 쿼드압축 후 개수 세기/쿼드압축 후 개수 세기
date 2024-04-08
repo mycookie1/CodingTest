@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int zero_count = 0;
+int one_count = 0;
+bool check[1025][1025];
+vector<vector<int>> arrs;
+
+void checkArr(int r1, int c1, int r2, int c2) {
+    // 확인
+    int pre_arr = arrs[r1][c1];
+    bool check_same = true;
+    for(int i = r1; i <= r2; i++) {
+        for(int j = c1; j <= c2; j++) {
+            if(pre_arr != arrs[i][j]) {
+                check_same = false;
+                break;
+            }
+        }
+    }    
+        
+        
+    //전부 0이면
+    if(check_same && pre_arr == 0) {
+        zero_count++;
+    }
+    //전부 1이면
+    else if(check_same && pre_arr == 1) {
+        one_count++;
+    }   
+    //다르면
+    else if(check_same == false){
+        checkArr(r1, c1, r1 + (r2 - r1)/2, c1 + (c2 - c1)/2);
+        checkArr(r1, c1 + (c2 - c1)/2 + 1, r1 + (r2 - r1)/2, c2);
+        checkArr(r1 + (r2 - r1)/2 + 1, c1, r2, c1 + (c2 - c1)/2);
+        checkArr(r1 + (r2 - r1)/2 + 1, c1 + (c2 - c1)/2 +1, r2, c2);
+    }
+
+}
+
+
+vector<int> solution(vector<vector<int>> arr) {
+    vector<int> answer;
+    arrs = arr;
+    checkArr(0, 0, arr.size()-1, arr.size()-1);
+    answer.push_back(zero_count);
+    answer.push_back(one_count);
+    return answer;
+}
