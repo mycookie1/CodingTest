@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int number[10000];
+int total_time[10000];
+bool check[10000];
+
+int make_number(string car_time) {
+        int temp = car_time[0] - '0';
+            temp *= 10;
+            temp += car_time[1] - '0';
+            temp *= 60;
+            
+            int m = car_time[3] - '0';
+            m *= 10;
+            m += car_time[4] - '0';
+            temp += m;
+    return temp;
+}
+
+vector<int> solution(vector<int> fees, vector<string> records) {
+    vector<int> answer;
+    for(int i = 0; i < records.size(); i++) {
+        string word = records[i].substr(11);
+        int car_number = stoi(records[i].substr(6,9));
+        string car_time = records[i].substr(0,5);
+        
+        if(word == "IN") {
+            check[car_number] = true;
+            number[car_number] = make_number(car_time);
+        }
+        else {
+            check[car_number] = false;
+            total_time[car_number] += make_number(car_time) - number[car_number];
+        }
+    }
+    for(int i = 0; i < 10000; i++) {
+        if(check[i] == true) {
+            total_time[i] += make_number("23:59") - number[i];
+        }
+    }
+    for(int i = 0; i < 10000; i++) {
+        int temp = total_time[i];
+        if( temp > 0) {
+            int money = 0;
+            
+            money += fees[1];
+            temp -= fees[0];
+            
+            while(temp > 0){
+                money += fees[3];
+                temp -= fees[2];
+            }
+            answer.push_back(money);
+        }
+    }
+    return answer;
+}
