@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <iostream>
+using namespace std;
+
+priority_queue<pair<int, int>> p[51];
+int board[51];
+
+int solution(int N, vector<vector<int> > road, int K) {
+    int answer = 0;
+    for(int i = 2; i <= 50; i++) {
+        board[i] = 500001;
+    }
+    for(int i = 0; i < road.size(); i++) {
+        int a = road[i][0];
+        int b = road[i][1];
+        int c = road[i][2];
+        p[a].push(make_pair(c*-1,b));
+        p[b].push(make_pair(c*-1,a));
+    }
+    queue<int> q;
+    q.push(1);
+    while(!q.empty()) {
+        int idx = q.front();
+        q.pop();
+        priority_queue<pair<int, int>> temp_p = p[idx];
+    
+        while(!temp_p.empty()) {
+            pair<int,int> temp = temp_p.top();
+            temp_p.pop();
+            temp.first = temp.first*-1;
+            if(board[temp.second] >= board[idx] + temp.first) {
+                board[temp.second] = board[idx] + temp.first;
+                q.push(temp.second);
+            }
+        }
+    }
+    
+    for(int i = 1; i <= 50; i++) {
+        if(board[i] <= K) answer++;
+    }
+    return answer;
+}
