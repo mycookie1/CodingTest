@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include<memory.h>
+using namespace std;
+string boards[5][5];
+int answer = -1;
+int moveX[4] = {0,1,0,-1};
+int moveY[4] = {1,0,-1,0};
+bool visited[5][5];
+
+bool checkBoundary(int x, int y){
+    return  0 <= x && x <= 4 && 0 <= y && y <= 4;
+}
+
+void move(int x, int y, int deep, int cnt){
+    if(answer < deep) answer = deep;
+   
+    for(int i = 0; i < 4; i ++) {
+        int nextX = x + moveX[i];
+        int nextY = y + moveY[i];
+      
+        if(checkBoundary(nextX,nextY) && visited[nextX][nextY] == false) {
+            char nowWord = boards[x][y][0];
+            char nextWord = boards[nextX][nextY][0];
+            
+            visited[nextX][nextY] = true;
+            if(nextWord > nowWord) {
+                move(nextX, nextY, deep+1, cnt);
+            }
+            else if(cnt<1 && nowWord > nextWord) {
+                move(nextX, nextY, deep+1, cnt+1);
+            }
+            visited[nextX][nextY] = false;
+        }
+    } 
+}
+
+int solution(vector<vector<string>> board) {
+    for(int i = 0; i <= 4; i++) {
+        for(int j = 0; j <= 4; j++) {
+            boards[i][j] = board[i][j];
+        }
+    } 
+
+    for(int i = 0; i <= 4; i++) {
+        for(int j = 0; j <= 4; j++) {
+            memset(visited, false, sizeof(visited));
+            move(i,j,1,0);
+        }
+    } 
+    
+    return answer;
+}
