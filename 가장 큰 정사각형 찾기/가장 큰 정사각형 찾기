@@ -1,0 +1,50 @@
+#include <iostream>
+#include<vector>
+#include<cmath>
+using namespace std;
+int square[1000][1000];
+vector<vector<int>> board;
+
+
+void findSquare(int x, int y) {
+    square[x][y] = 1;
+
+    if(square[x+1][y] > 0 && square[x][y+1] > 0 && square[x][y] > 0 ){
+        // (i+1,j) (i,j+1) 중 더 작은 수
+        int temp = (square[x+1][y] < square[x][y+1]) ? square[x+1][y] : square[x][y+1];
+        temp = temp < square[x+1][y+1] ? temp : square[x+1][y+1];
+        temp = sqrt(temp);
+        square[x][y] = (temp+1) * (temp+1);
+        
+    }
+    
+        
+
+     
+}
+
+int solution(vector<vector<int>> b)
+{
+    board = b; 
+    int answer = 0;
+    int rowMax = board.size();
+    int colMax = board[0].size();
+    
+    for(int i = rowMax - 1; i>= 0 ; i--) {
+        for(int j = colMax - 1; j >= 0; j--) {
+            if(board[i][j] == 1) {
+                if(i == rowMax-1 || j == colMax -1) square[i][j] = 1;
+                else {
+                   findSquare(i,j);
+                }
+            }
+        }
+    }
+
+    for(int i = rowMax - 1; i>= 0 ; i--) {
+        for(int j = colMax - 1; j >= 0; j--) {
+            if(answer < square[i][j]) answer = square[i][j];
+        }
+    }
+    return answer;
+}
